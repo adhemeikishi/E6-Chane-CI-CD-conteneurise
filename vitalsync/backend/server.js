@@ -1,16 +1,16 @@
 const express = require("express");
 const app = express();
+
 app.get("/health", (req, res) => {
-res.json({ status: "ok", timestamp: new Date() });
+  res.json({ status: "ok" });
 });
-app.get("/api/activities", (req, res) => {
-res.json([]);
-});
+
+// Lance le serveur seulement si exécuté directement (pas en test)
 if (require.main === module) {
-  app.listen(3000, () => console.log("VitalSync API on :3000"));
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 }
 
 module.exports = app;
-app.get('/api/status', (req, res) => {
-  res.json({ status: 'running', version: '1.0.0' });
-});

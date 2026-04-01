@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  # ========== ÉTAPE 1 : Lint & Tests ==========
+  #  ÉTAPE 1 : Lint & Tests 
   lint-and-test:
     runs-on: ubuntu-latest
     defaults:
@@ -26,12 +26,12 @@ jobs:
         run: npm install
 
       - name: Linter ESLint
-        run: npx eslint . --ext .js
+        run: npx eslint .
 
       - name: Tests unitaires
         run: npm test
 
-  # ========== ÉTAPE 2 : Build & Push Docker ==========
+  #  ÉTAPE 2 : Build & Push Docker 
   build-and-push:
     runs-on: ubuntu-latest
     needs: lint-and-test
@@ -56,7 +56,7 @@ jobs:
           docker build -t ghcr.io/${{ github.repository }}/frontend:${{ github.sha }} ./frontend
           docker push ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}
 
-  # ========== ÉTAPE 3 : Déploiement staging + Health check ==========
+  #  ÉTAPE 3 : Déploiement staging + Health check 
   deploy-staging:
     runs-on: ubuntu-latest
     needs: build-and-push
