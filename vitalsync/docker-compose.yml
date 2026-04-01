@@ -1,16 +1,14 @@
 version: "3.8"
 
 services:
-  # --- Base de données PostgreSQL ---
   database:
     image: postgres:16-alpine
     container_name: vitalsync-db
     restart: unless-stopped
-    env_file: .env
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: vitalsync
+      POSTGRES_PASSWORD: secret123
+      POSTGRES_DB: vitalsync_db
     volumes:
       - pg_data:/var/lib/postgresql/data
     networks:
@@ -18,14 +16,12 @@ services:
     ports:
       - "5432:5432"
 
-  # --- Back-end Node.js ---
   backend:
     build: ./backend
     container_name: vitalsync-backend
     restart: unless-stopped
-    env_file: .env
     environment:
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
+      DATABASE_URL: postgres://vitalsync:secret123@database:5432/vitalsync_db
       PORT: 3000
     depends_on:
       - database
@@ -34,7 +30,6 @@ services:
     ports:
       - "3000:3000"
 
-  # --- Front-end Nginx ---
   frontend:
     build: ./frontend
     container_name: vitalsync-frontend
@@ -46,11 +41,9 @@ services:
     ports:
       - "80:80"
 
-# --- Réseau personnalisé ---
 networks:
   vitalsync-network:
     driver: bridge
 
-# --- Volume persistant ---
 volumes:
   pg_data:

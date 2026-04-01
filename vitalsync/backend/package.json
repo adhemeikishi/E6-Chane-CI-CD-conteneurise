@@ -1,11 +1,17 @@
 {
   "name": "vitalsync-backend",
   "version": "1.0.0",
+  "description": "VitalSync Backend",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node test/health.test.js"
+    "test": "jest --forceExit --detectOpenHandles"
   },
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "eslint": "^10.1.0",
+    "jest": "^30.3.0"
   }
 }
