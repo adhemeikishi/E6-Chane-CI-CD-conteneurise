@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: vitalsync-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vitalsync
+      POSTGRES_PASSWORD: secret123
+      POSTGRES_DB: vitalsync_db
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - vitalsync-network
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    container_name: vitalsync-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://vitalsync:secret123@database:5432/vitalsync_db
+      PORT: 3000
+    depends_on:
+      - database
+    networks:
+      - vitalsync-network
+    ports:
+      - "3000:3000"
+
+  frontend:
+    build: ./frontend
+    container_name: vitalsync-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - vitalsync-network
+    ports:
+      - "80:80"
+
+networks:
+  vitalsync-network:
+    driver: bridge
+
+volumes:
+  pg_data:
