@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  REPO_NAME: adhemeikishi/e6-chane-ci-cd-conteneurise
+
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
@@ -40,12 +43,12 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build et Push Backend
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/backend:${{ github.sha }} vitalsync/backend
-          docker push ghcr.io/${{ github.repository }}/backend:${{ github.sha }}
+          docker build -t ghcr.io/${{ env.REPO_NAME }}/backend:${{ github.sha }} vitalsync/backend
+          docker push ghcr.io/${{ env.REPO_NAME }}/backend:${{ github.sha }}
       - name: Build et Push Frontend
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/frontend:${{ github.sha }} vitalsync/frontend
-          docker push ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}
+          docker build -t ghcr.io/${{ env.REPO_NAME }}/frontend:${{ github.sha }} vitalsync/frontend
+          docker push ghcr.io/${{ env.REPO_NAME }}/frontend:${{ github.sha }}
 
   deploy-staging:
     runs-on: ubuntu-latest
